@@ -28,20 +28,9 @@ listfile_entry *
 create_filelist(int maxfiles)
 {
 
-     word_list wordlist = {
-          // &first_word, &last_word
-          NULL, NULL
-     };
+     // TODO
 
-     hash_table hash_table = {
-         &wordlist, MAX_ENTRIES
-     };
-
-     listfile_entry table = {
-          // , 1
-     };
-
-     return hash_table;
+     return NULL;
 }
 
 /**
