@@ -20,12 +20,32 @@
    returns : pointer to table or NULL if creation error
 */
 hash_table *
-create_table()
-{
+create_table(){
 
-  // TO BE COMPLETED
+  if(MAX_ENTRIES>0){
 
-  return NULL; // TODO
+    hash_table ht;
+    ht.hsize = MAX_ENTRIES;
+    ht.htable = (word_list *)malloc(ht.hsize*sizeof(word_list));
+    // pas la place pour le tableau / allocation mal passée
+    if (ht.htable == NULL){
+      return NULL;
+    }
+
+    for(int i = 0; i < ht.hsize; i++){
+      word_list wl;
+      wl.first_word = NULL;
+      wl.last_word = NULL;
+      ht.htable[i] = wl;
+    }
+
+
+    hash_table * htp = &ht;
+    return htp;
+}
+  else{
+    return NULL;
+  }
 }
 
 /**
@@ -66,9 +86,23 @@ void update_table(hash_table * htable_ptr,
                    int file_index)
 {
 
-  // TO BE COMPLETED
+  int key = hashcode(word, htable_ptr -> hsize );
+
+  word_list wl = htable_ptr -> htable[key];
+
+  // Il y a une liste mais le mot n'y est pas présent
+  
+
+
+  // Il est déjà présent dans la liste
+
+
 
 }
+
+
+
+
 
 /**
    print table contents

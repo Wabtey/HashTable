@@ -28,9 +28,9 @@ listfile_entry *
 create_filelist(int maxfiles)
 {
 
-     // TODO
+  // TO BE COMPLETED
 
-     return NULL;
+  return NULL; // TODO
 }
 
 /**
@@ -52,14 +52,15 @@ create_filelist(int maxfiles)
    -2 if allocation error
     0 if everything ok
 */
-int add_file(char filename[],
-             listfile_entry *filelist,
-             hash_table *htable_ptr)
+int
+add_file(char filename[],
+	 listfile_entry * filelist,
+	 hash_table * htable_ptr)
 {
 
-     // TO BE COMPLETED
+   // TO BE COMPLETED
 
-     return 0; // all fine
+  return 0; // all fine
 }
 
 /**
@@ -74,14 +75,15 @@ int add_file(char filename[],
    -1 if file not in table
     0 if file removed
 */
-int remove_file(char filename[],
-                listfile_entry *filelist,
-                hash_table *htable_ptr)
+int
+remove_file(char filename[],
+	    listfile_entry * filelist,
+	    hash_table * htable_ptr)
 {
 
-     // TO BE COMPLETED
+  // TO BE COMPLETED
 
-     return 0;
+  return 0;
 }
 
 /*
@@ -90,10 +92,12 @@ int remove_file(char filename[],
   parameters :
    filelist : pointer to table of files
 */
-void print_list(listfile_entry *filelist)
+void
+print_list(listfile_entry * filelist)
 {
 
-     // TO BE COMPLETED
+  // TO BE COMPLETED
+
 }
 
 /**
@@ -102,9 +106,10 @@ void print_list(listfile_entry *filelist)
 parameters :
    filelist   : pointer to table of files
 */
-void free_filelist(listfile_entry *filelist)
+void
+free_filelist(listfile_entry * filelist)
 {
-     // TO BE COMPLETED
+  // TO BE COMPLETED
 }
 
 // ************************************************************************
@@ -112,3 +117,4 @@ void free_filelist(listfile_entry *filelist)
 // ************************************************************************
 
 // TO BE COMPLETED
+

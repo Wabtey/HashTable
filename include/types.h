@@ -42,6 +42,6 @@ struct
   int loaded;			// true if file loaded 
 }
   listfile_entry;
-     
+
 
 #endif // __TYPES_H__
