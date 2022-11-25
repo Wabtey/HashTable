@@ -27,8 +27,18 @@
 listfile_entry *
 create_filelist(int maxfiles)
 {
+  listfile_entry * lf = (listfile_entry*)malloc(maxfiles*sizeof(listfile_entry));
 
-     // TODO
+  if (lf == NULL){
+  return NULL;
+  }
+
+  for(int i = 0 ; i<maxfiles ; i++){
+      lf[i].filename[MAX_LENGTH];
+      lf[i].loaded = 0;
+  }
+
+  return lf;
 
      return NULL;
 }
