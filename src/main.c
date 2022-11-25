@@ -11,10 +11,10 @@ int
 main()
 {
   // create hash table
-  // TO BE COMPLETED
+  hash_table * table = create_table();
 
   // create filelist array
-  // TO BE COMPLETED
+  listfile_entry * list_file = create_filelist(MAX_FILES);
 
   // display menu
   while (1) {
@@ -28,6 +28,7 @@ main()
     fprintf(stderr, "%d. Print file list\n", ++nbchoices);
     fprintf(stderr, "\n0. Quit\n");
     int choice;
+    char file[MAX_LENGTH];
     while (1) {
       fprintf(stderr, "Your choice ? ");
       scanf("%d", & choice);
@@ -42,10 +43,12 @@ main()
 
     switch (choice) {
 
-      // Load a file in dictionary
+
     case 1:
-      
-      // TO BE COMPLETED
+
+      printf("Choose a file : \n");
+      scanf("%s", file);
+      add_file(file,list_file,table);
 
       break;
 

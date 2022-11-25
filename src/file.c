@@ -28,7 +28,7 @@ listfile_entry *
 create_filelist(int maxfiles)
 {
 
-  // TO BE COMPLETED
+  
 
   return NULL; // TODO
 }
@@ -117,4 +117,3 @@ free_filelist(listfile_entry * filelist)
 // ************************************************************************
 
 // TO BE COMPLETED
-
