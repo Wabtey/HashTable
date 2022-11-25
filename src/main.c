@@ -96,7 +96,10 @@ main()
 int
 hashcode(char word[], int size)
 {
-
-  // TO BE COMPLETED
-
+  int hc = 0;
+  for (int i = 0; i< strlen(word); i++){
+    hc += word[i];
+  }
+  hc=hc%size;
+return hc;
 }
