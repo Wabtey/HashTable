@@ -6,6 +6,13 @@
 #include "types.h"
 #include "functions.h" // extern functions declarations
 
+// from https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c
+#ifdef WIN32
+#include <io.h>
+#define F_OK 0
+#define access _access
+#endif
+
 // ------------------------------------------------------------------------
 // inner functions declarations
 // ------------------------------------------------------------------------
@@ -27,19 +34,19 @@
 listfile_entry *
 create_filelist(int maxfiles)
 {
-  listfile_entry * lf = (listfile_entry*)malloc(maxfiles*sizeof(listfile_entry));
+     listfile_entry *lf = (listfile_entry *)malloc(maxfiles * sizeof(listfile_entry));
 
-  if (lf == NULL){
-  return NULL;
-  }
+     if (lf == NULL)
+     {
+          return NULL;
+     }
 
-  for(int i = 0 ; i<maxfiles ; i++){
-      lf[i].filename[MAX_LENGTH];
-      lf[i].loaded = 0;
-  }
+     for (int i = 0; i < maxfiles; i++)
+     {
+          lf[i].loaded = 0;
+     }
 
-  return lf;
-
+     return lf;
 }
 
 /**
@@ -66,7 +73,44 @@ int add_file(char filename[],
              hash_table *htable_ptr)
 {
 
-     // TO BE COMPLETED
+     // TODO rajouter -1 -2 en exception
+
+     // from https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c
+     // F_OK
+     // if (access(filename, 0) != 0) {
+     //      return -1;
+     // }
+
+     // compare the size of a char with the MAX_LENGTH
+     if (sizeof(*filename) > MAX_LENGTH)
+     {
+          // filename is too long, its size is more than 50 (see MAX_LENGTH)
+          return -2;
+     }
+
+     int index_entry = -1;
+     for (int i = 0; i < sizeof(filelist); i++)
+     {
+          if (filelist[i].loaded == 0)
+          {
+               index_entry = i;
+          }
+          if (strcmp(filelist[i].filename, filename) == 0)
+          {
+               printf("already present in table");
+               return 1;
+          }
+     }
+     if (index_entry == -1)
+     {
+          printf("no space left in filelist");
+          return 2;
+     }
+     else
+     {
+          filelist[index_entry].loaded = 1;
+          strcpy(filelist[index_entry].filename, filename);
+     }
 
      return 0; // all fine
 }
