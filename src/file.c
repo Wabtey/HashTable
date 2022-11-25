@@ -40,7 +40,6 @@ create_filelist(int maxfiles)
 
   return lf;
 
-     return NULL;
 }
 
 /**
