@@ -102,6 +102,13 @@ int main()
 // returns : N ; 0 <= N < size
 int hashcode(char word[], int size)
 {
+     if (size <= 0)
+     {
+          printf("taille max null");
+          return -1;
+     }
+     else
+     {
      int hc = 0;
      for (int i = 0; i < strlen(word); i++)
      {
@@ -109,4 +116,5 @@ int hashcode(char word[], int size)
      }
      hc = hc % size;
      return hc;
+     }
 }
