@@ -75,19 +75,6 @@ int add_file(char filename[],
 
      // TODO rajouter -1 -2 en exception
 
-     // from https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c
-     // F_OK
-     // if (access(filename, 0) != 0) {
-     //      return -1;
-     // }
-
-     // compare the size of a char with the MAX_LENGTH
-     if (sizeof(*filename) > MAX_LENGTH)
-     {
-          // filename is too long, its size is more than 50 (see MAX_LENGTH)
-          return -2;
-     }
-
      int index_entry = -1;
      for (int i = 0; i < sizeof(filelist); i++)
      {
@@ -110,6 +97,20 @@ int add_file(char filename[],
      {
           filelist[index_entry].loaded = 1;
           strcpy(filelist[index_entry].filename, filename);
+          FILE *fichier = NULL;
+          fichier = fopen(filename, "r");
+          char word[MAX_LENGTH];
+          if (fichier == NULL)
+          {
+               perror("Error opening file"); // print error
+               return (-1);
+          }
+          do
+          {
+               fgets(word, MAX_LENGTH, fichier);
+               update_table(htable_ptr, word, filename, index_entry);
+          } while (!feof(fichier));
+          fclose(fichier);
      }
 
      return 0; // all fine
@@ -131,10 +132,25 @@ int remove_file(char filename[],
                 listfile_entry *filelist,
                 hash_table *htable_ptr)
 {
+     for (int i = 0; i < sizeof(filelist); i++)
+     {
+          if (strcmp(filename, filelist[i].filename))
+          {
+               filelist[i].loaded = 0;
+               FILE *fichier = NULL;
+               fichier = fopen(filename, "r");
+               char word[MAX_LENGTH];
+               while (!feof(fichier))
+               {
+                    fgets(word, MAX_LENGTH, fichier);
+                    update_table(htable_ptr, word, filename, i);
+               }
+               fclose(fichier);
+               return 0;
+          }
+     }
 
-     // TO BE COMPLETED
-
-     return 0;
+     return -1;
 }
 
 /*
@@ -145,6 +161,13 @@ int remove_file(char filename[],
 */
 void print_list(listfile_entry *filelist)
 {
+     for (int i = 0; i < sizeof(filelist); i++)
+     {
+          if (filelist[i].loaded == 1)
+          {
+               printf("%s\n", filelist[i].filename);
+          }
+     }
 
      // TO BE COMPLETED
 }

@@ -29,6 +29,7 @@ int main()
           fprintf(stderr, "\n0. Quit\n");
           int choice;
           char file[MAX_LENGTH];
+          char word[MAX_LENGTH];
           while (1)
           {
                fprintf(stderr, "Your choice ? ");
@@ -62,9 +63,9 @@ int main()
                // Search a word in dictionary
           case 2:
 
-               // printf("Choose a word : \n");
-               // scanf("%s", word);
-               // update_table(table, word, list_file[MAX_ENTRIES - 1].filename, MAX_ENTRIES - 1);
+               printf("Choose a word : \n");
+               scanf("%s", word);
+               update_table(table, word, list_file[MAX_ENTRIES - 1].filename, MAX_ENTRIES - 1);
 
                break;
 
@@ -84,9 +85,7 @@ int main()
 
                // Print file list
           case 5:
-
-               // TO BE COMPLETED
-
+               print_list(list_file);
                break;
           }
           fprintf(stderr, "-------------------------------------------------\n");

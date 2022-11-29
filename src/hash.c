@@ -23,30 +23,33 @@ hash_table *
 create_table()
 {
 
-  if(MAX_ENTRIES>0){
+     if (MAX_ENTRIES > 0)
+     {
 
-    hash_table ht;
-    ht.hsize = MAX_ENTRIES;
-    ht.htable = (word_list *)malloc(ht.hsize*sizeof(word_list));
-    // pas la place pour le tableau / allocation mal passée
-    if (ht.htable == NULL){
-      return NULL;
+          hash_table *ht = (hash_table *)malloc(sizeof(hash_table));
+          ht->hsize = MAX_ENTRIES;
+          ht->htable = (word_list *)malloc(ht->hsize * sizeof(word_list));
+          // pas la place pour le tableau / allocation mal passée
+          if (ht->htable == NULL)
+          {
+               return NULL;
+          }
+
+          for (int i = 0; i < ht->hsize; i++)
+          {
+               word_list wl;
+               wl.first_word = NULL;
+               wl.last_word = NULL;
+               ht->htable[i] = wl;
+          }
+
+          // hash_table * htp = &ht;
+          return ht;
      }
-
-    for(int i = 0; i < ht.hsize; i++){
-      word_list wl;
-      wl.first_word = NULL;
-      wl.last_word = NULL;
-      ht.htable[i] = wl;
+     else
+     {
+          return NULL;
      }
-
-
-    hash_table * htp = &ht;
-    return htp;
-}
-  else{
-    return NULL;
-  }
 }
 
 /**
@@ -60,15 +63,14 @@ create_table()
 
    returns : true if found, false otherwise
 */
-int
-search_word(char word[],
-	    listfile_entry * filelist,
-	    hash_table * htable_ptr)
+int search_word(char word[],
+                listfile_entry *filelist,
+                hash_table *htable_ptr)
 {
 
-  // TO BE COMPLETED
+     // TO BE COMPLETED
 
-  return 0;
+     return 0;
 }
 
 /**
@@ -81,38 +83,38 @@ search_word(char word[],
    file_index:  the position where the filename has been stored
 */
 
-void update_table(hash_table * htable_ptr,
-                   char word[],
-                   char filename[],
-                   int file_index)
+void update_table(hash_table *htable_ptr,
+                  char word[],
+                  char filename[],
+                  int file_index)
 {
 
-  int key = hashcode(word, htable_ptr -> hsize );
+     int key = hashcode(word, htable_ptr->hsize);
 
-  word_list wl = htable_ptr -> htable[key];
-  word_entry * current = wl.first_word;
-  word_entry * last = wl.last_word;
-
-
-
-  // On parcourt la liste
-  while(current != last){
-    // Il est déjà présent dans la liste
-    if(current -> word == word){
-      current -> times = current -> times + 1;
-      return;
+     word_list wl = htable_ptr->htable[key];
+     word_entry *current = wl.first_word;
+     // word_entry * last = wl.last_word;
+     while (current != NULL)
+     {
+          // Il est déjà présent dans la liste
+          char currentWord[MAX_LENGTH];
+          strcpy(currentWord, word);
+          if (strcmp(currentWord, word) == 0)
+          {
+               current->times += 1;
+               return;
+          }
+          current = current->next;
      }
-    current = current -> next;
-  }
-  //Sinon on l'ajoute au début de la liste
-  word_entry newWord;
-  strcpy(newWord.word,word);
-  newWord.times=1;
-  newWord.in_file=file_index;
-  newWord.next = wl.first_word;
-  wl.first_word = &newWord;
-  return;
+     // Sinon on l'ajoute au début de la liste
 
+     word_entry *newWord = malloc(sizeof(word_entry));
+     strcpy(newWord->word, word);
+     newWord->times = 1;
+     newWord->in_file = file_index;
+     newWord->next = wl.first_word;
+     wl.first_word = newWord;
+     return;
 }
 
 /**
@@ -122,29 +124,26 @@ void update_table(hash_table * htable_ptr,
    htable_ptr : pointer to hash table
    filelist   : pointer to table of files
 */
-void
-print_table(hash_table * htable_ptr,
-	    listfile_entry * filelist)
+void print_table(hash_table *htable_ptr,
+                 listfile_entry *filelist)
 {
-  int hsize =htable_ptr -> hsize;
-  for(int i=0; i<hsize; i++){
-    word_list wl = htable_ptr->htable[i];
-    if (wl.first_word!= NULL){
-      printf("word_list numero %d \n", i);
-      word_entry * current = wl.first_word;
-      word_entry * last = wl.last_word;
-      while(&current!=&last){
-        printf("%s ", current->word );
-      }
-      printf("%s, ", current->word );
-    }
-  }
-
-
-
-
+     int hsize = htable_ptr->hsize;
+     for (int i = 0; i < hsize; i++)
+     {
+          word_list wl = htable_ptr->htable[i];
+          if (wl.first_word != NULL)
+          {
+               printf("word_list numero %d \n", i);
+               word_entry *current = wl.first_word;
+               word_entry *last = wl.last_word;
+               while (&current != &last)
+               {
+                    printf("%s ", current->word);
+               }
+               printf("%s, ", current->word);
+          }
+     }
 }
-
 
 /**
    free hash table
@@ -152,12 +151,10 @@ print_table(hash_table * htable_ptr,
    parameters :
    htable_ptr : pointer to hash table
 */
-void
-free_table(hash_table * htable_ptr)
+void free_table(hash_table *htable_ptr)
 {
 
-  // TO BE COMPLETED
-
+     // TO BE COMPLETED
 }
 
 // ------------------------------------------------------------------------
