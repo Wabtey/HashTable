@@ -6,13 +6,6 @@
 #include "types.h"
 #include "functions.h" // extern functions declarations
 
-// from https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c
-#ifdef WIN32
-#include <io.h>
-#define F_OK 0
-#define access _access
-#endif
-
 // ------------------------------------------------------------------------
 // inner functions declarations
 // ------------------------------------------------------------------------
@@ -105,11 +98,13 @@ int add_file(char filename[],
                perror("Error opening file"); // print error
                return (-1);
           }
-          do
+
+          fgets(word, MAX_LENGTH, fichier);
+          while (!feof(fichier))
           {
-               fgets(word, MAX_LENGTH, fichier);
                update_table(htable_ptr, word, filename, index_entry);
-          } while (!feof(fichier));
+               fgets(word, MAX_LENGTH, fichier);
+          }
           fclose(fichier);
      }
 
@@ -168,8 +163,6 @@ void print_list(listfile_entry *filelist)
                printf("%s\n", filelist[i].filename);
           }
      }
-
-     // TO BE COMPLETED
 }
 
 /**
