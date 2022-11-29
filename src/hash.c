@@ -89,31 +89,33 @@ void update_table(hash_table *htable_ptr,
                   int file_index)
 {
 
+     // on récupère la bonne adresse dans la hashtable
      int key = hashcode(word, htable_ptr->hsize);
+     word_list *wl = &(htable_ptr->htable[key]);
 
-     word_list wl = htable_ptr->htable[key];
-     word_entry *current = wl.first_word;
-     // word_entry * last = wl.last_word;
+     // on récupère le premier mot de la liste de mot stocké
+     word_entry *current = wl->first_word;
+     // on parcourt la liste
      while (current != NULL)
      {
           // Il est déjà présent dans la liste
-          char currentWord[MAX_LENGTH];
-          strcpy(currentWord, word);
-          if (strcmp(currentWord, word) == 0)
+          if (strcmp(current->word, word) == 0)
           {
                current->times += 1;
+               printf("le mot %s est déjà présent, il est maintenant présent %d fois\n", word, current->times);
                return;
           }
           current = current->next;
      }
-     // Sinon on l'ajoute au début de la liste
-
+     // Sinon on ne l'a pas trouvé dans la liste
+     // on l'ajoute au début de la liste
+     printf("on ajoute le mot %s \n", word);
      word_entry *newWord = malloc(sizeof(word_entry));
      strcpy(newWord->word, word);
      newWord->times = 1;
      newWord->in_file = file_index;
-     newWord->next = wl.first_word;
-     wl.first_word = newWord;
+     newWord->next = wl->first_word;
+     wl->first_word = newWord;
      return;
 }
 
@@ -130,17 +132,16 @@ void print_table(hash_table *htable_ptr,
      int hsize = htable_ptr->hsize;
      for (int i = 0; i < hsize; i++)
      {
-          word_list wl = htable_ptr->htable[i];
-          if (wl.first_word != NULL)
+          word_list *wl = &(htable_ptr->htable[i]);
+          if (wl->first_word != NULL)
           {
                printf("word_list numero %d \n", i);
-               word_entry *current = wl.first_word;
-               word_entry *last = wl.last_word;
-               while (&current != &last)
+               word_entry *current = wl->first_word;
+               while (current != NULL)
                {
-                    printf("%s ", current->word);
+                    printf("%s", current->word);
+                    current = current->next;
                }
-               printf("%s, ", current->word);
           }
      }
 }

@@ -78,9 +78,7 @@ int main()
 
                // Print dictionary
           case 4:
-
-               // TO BE COMPLETED
-
+               print_table(table, list_file);
                break;
 
                // Print file list
