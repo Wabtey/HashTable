@@ -29,7 +29,9 @@ main()
     fprintf(stderr, "\n0. Quit\n");
     int choice;
     char file[MAX_LENGTH];
+    char word[MAX_LENGTH];
     while (1) {
+      strcpy(word,"");
       fprintf(stderr, "Your choice ? ");
       scanf("%d", & choice);
       if (choice >= 0 && choice <= nbchoices) { break; }
@@ -54,30 +56,26 @@ main()
 
       // Search a word in dictionary
     case 2:
-
-      // TO BE COMPLETED
-
+      printf("Choose a word : \n");
+      scanf("%s", word);
+      search_word(word, list_file, table);
       break;
 
       // Remove file from dictionary
     case 3:
-
-      // TO BE COMPLETED
-
+      printf("Choose a file : \n");
+      scanf("%s", file);
+      remove_file(file,list_file,table);
       break;
 
       // Print dictionary
     case 4:
-
-      // TO BE COMPLETED
-
+      print_table(table,list_file);
       break;
 
       // Print file list
     case 5:
-
-      // TO BE COMPLETED
-
+      print_list(list_file);
       break;
     }
     fprintf(stderr, "-------------------------------------------------\n");
@@ -85,9 +83,8 @@ main()
   }
 
   // the end : free allocated memory
-
-  // TO BE COMPLETED
-
+free_table(table);
+free_filelist(list_file);
   return 0;
 }
 
@@ -96,7 +93,22 @@ main()
 int
 hashcode(char word[], int size)
 {
-
-  // TO BE COMPLETED
-
+  //printf("%s \n", word);
+  if(size == 0 ){
+    printf("taille max null");
+    return -1;
+  }
+  else{
+    //printf("on code le mot %s\n", word);
+    int hc = 0;
+    for (int i = 0; i< strlen(word); i++){
+      // vérifie que le caractère est aphanumérique
+      if(word[i]>=33 && word[i]<=126){
+        //printf("%c de valeur %d \n", (char)word[i], word[i] );
+        hc += word[i];
+      }
+    }
+    hc = hc%size;
+    return hc;
+  }
 }

@@ -61,6 +61,11 @@ print_table(hash_table * htable_ptr,
 void
 free_table(hash_table * htable_ptr);
 
+
+// remove element in hash table
+void
+remove_word(hash_table * htable_ptr, char word[], int  i);
+
 // ------------------------------------------------------------------------
 // main.c
 // ------------------------------------------------------------------------
