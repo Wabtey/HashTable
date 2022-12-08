@@ -5,6 +5,9 @@
 #define MAX_FILES 20         // maximum number of files
 #define MAX_ENTRIES 1023     // capacity of hash table
 
+// define FALSE and TRUE
+typedef enum {FALSE = 0, TRUE} boolean;
+
 // elements of the word list
 typedef
 struct word_entry

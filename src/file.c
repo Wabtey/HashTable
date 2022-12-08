@@ -27,19 +27,20 @@
 listfile_entry *
 create_filelist(int maxfiles)
 {
-  listfile_entry * lf = (listfile_entry *)malloc(maxfiles*sizeof(listfile_entry));
+    listfile_entry *lf = (listfile_entry *)malloc(maxfiles * sizeof(listfile_entry));
 
-  if (lf == NULL){
-  return NULL;
-  }
+    if (lf == NULL)
+    {
+        return NULL;
+    }
 
-  for(int i = 0 ; i<maxfiles ; i++){
-      strcpy(lf[i].filename , "");
-      lf[i].loaded = 0;
-  }
+    for (int i = 0; i < maxfiles; i++)
+    {
+        strcpy(lf[i].filename, "");
+        lf[i].loaded = 0;
+    }
 
-  return lf;
-
+    return lf;
 }
 
 /**
@@ -61,94 +62,104 @@ create_filelist(int maxfiles)
    -2 if allocation error
     0 if everything ok
 */
-int
-add_file(char filename[],
-	 listfile_entry * filelist,
-	 hash_table * htable_ptr)
+int add_file(char filename[],
+             listfile_entry *filelist,
+             hash_table *htable_ptr)
 {
-  int index_entry=-1;
-  for (int i =0 ; i<sizeof(filelist); i++){
-    if(filelist[i].loaded == 0){
-      index_entry = i;
+    int index_entry = -1;
+    for (int i = 0; i < sizeof(filelist); i++)
+    {
+        if (filelist[i].loaded == 0)
+        {
+            index_entry = i;
+        }
+        if (strcmp(filelist[i].filename, filename) == 0)
+        {
+            if (filelist[i].loaded == 1)
+            {
+                printf("already present in table");
+                return 1;
+            }
+            else
+            { // présent mais pas loaded
+                filelist[i].loaded = 1;
+                FILE *fichier = NULL;
+                fichier = fopen(filename, "r");
+                char c;
+                char word[MAX_LENGTH];
+                if (fichier == NULL)
+                {
+                    perror("Error opening file"); // print error
+                    return (-1);
+                }
+                strcpy(word, "");
+                do
+                {
+                    c = (char)fgetc(fichier);
+                    // space       new line     null       tab
+                    if (c == ' ' || c == '\n' || c == '\0' || c == '\t' || c == ',' || c == '.' || c == '(' || c == ')' || c == '?' || c == '!')
+                    {
+                        update_table(htable_ptr, word, filename, index_entry);
+                        strcpy(word, "");
+                    }
+                    else
+                    {
+                        strcat(word, &c); // Keeps track of current word
+                    }
+
+                } while (c != EOF);
+
+                fclose(fichier);
+                return 0;
+            }
+        }
     }
-    if (strcmp(filelist[i].filename, filename)==0){
-      if(filelist[i].loaded == 1){
-        printf("already present in table");
-        return 1;
-      }
-      else{// présent mais pas loaded
-        filelist[i].loaded = 1;
-        FILE * fichier = NULL;
-        fichier = fopen(filename,"r");
+    if (index_entry == -1)
+    {
+        printf("no space left in filelist");
+        return 2;
+    }
+    else
+    {
+        FILE *fichier = NULL;
+        fichier = fopen(filename, "r");
+
+        // le fichier n'xiste pas
+        if (fichier == NULL)
+        {
+            perror("Error opening file"); // print error
+            return (-1);
+        }
         char c;
         char word[MAX_LENGTH];
-        if(fichier == NULL){
-          perror("Error opening file"); // print error
-          return(-1);
-        }
+        filelist[index_entry].loaded = 1;
+        strcpy(filelist[index_entry].filename, filename);
         strcpy(word, "");
-        do{
-          c = (char)fgetc(fichier);
-          // space       new line     null       tab
-          if(c == ' ' || c == '\n' ||  c == '\0' || c =='\t' || c==',' || c=='.' || c =='(' || c == ')' || c=='?' || c=='!'){
-            update_table(htable_ptr,word,filename,index_entry);
-            strcpy(word, "");
-          }
-          else
-          {
-            strcat(word, &c); //Keeps track of current word
-          }
-
-        }while(c != EOF);
+        do
+        {
+            c = (char)fgetc(fichier);
+            // space       new line     null       tab
+            if (c == ' ' || c == '\n' || c == '\0' || c == '\t' || c == ',' || c == '.' || c == '(' || c == ')' || c == '?' || c == '!')
+            {
+                if (strcmp(word, "") != 0)
+                {
+                    update_table(htable_ptr, word, filename, index_entry);
+                    strcpy(word, "");
+                }
+            }
+            else
+            {
+                strcat(word, &c); // Keeps track of current word
+            }
+            // characterfunction(c);
+        } while (c != EOF);
 
         fclose(fichier);
-        return 0;
-      }
     }
-  }
-  if(index_entry==-1){
-    printf("no space left in filelist");
-    return 2;
-  }
-  else{
-    FILE * fichier = NULL;
-    fichier = fopen(filename,"r");
 
+    // rajouter -1 -2 en exception
 
-    //le fichier n'xiste pas
-    if(fichier == NULL){
-      perror("Error opening file"); // print error
-      return(-1);
-    }
-    char c;
-    char word[MAX_LENGTH];
-    filelist[index_entry].loaded=1;
-    strcpy(filelist[index_entry].filename,filename);
-    strcpy(word, "");
-    do{
-      c = (char)fgetc(fichier);
-      // space       new line     null       tab
-      if(c == ' ' || c == '\n' ||  c == '\0' || c =='\t' || c==',' || c=='.' || c =='(' || c == ')' || c=='?' || c=='!'){
-        if(strcmp(word , "")!=0){
-          update_table(htable_ptr,word,filename,index_entry);
-          strcpy(word, "");
-        }
-      }
-      else
-      {
-        strcat(word, &c); //Keeps track of current word
-      }
-      //characterfunction(c);
-    }while(c != EOF);
-
-    fclose(fichier);
-
-  }
-
-// rajouter -1 -2 en exception
-
-
-  return 0; // all fine
+    return 0; // all fine
 }
 
 /**
@@ -163,55 +174,58 @@ add_file(char filename[],
    -1 if file not in table
     0 if file removed
 */
-int
-remove_file(char filename[],
-	    listfile_entry * filelist,
-	    hash_table * htable_ptr)
+int remove_file(char filename[],
+                listfile_entry *filelist,
+                hash_table *htable_ptr)
 {
 
-  // on parcourt l'ensemble des files
-  for (int i = 0; i<sizeof(filelist); i++){
-      // si le file est présent est chargé
-      if((strcmp(filename, filelist[i].filename)==0) && (filelist[i].loaded==1)){
-        // on ne le load plus
-        filelist[i].loaded=0;
+    // on parcourt l'ensemble des files
+    for (int i = 0; i < sizeof(filelist); i++)
+    {
+        // si le file est présent est chargé
+        if ((strcmp(filename, filelist[i].filename) == 0) && (filelist[i].loaded == 1))
+        {
+            // on ne le load plus
+            filelist[i].loaded = 0;
 
-        // on ouvre le fichier
-        FILE * fichier = NULL;
-        fichier = fopen(filename,"r");
+            // on ouvre le fichier
+            FILE *fichier = NULL;
+            fichier = fopen(filename, "r");
 
-        if(fichier == NULL){
-          perror("Error opening file"); // print error
-          return(-1);
-        }
-        char c;
-        char word[MAX_LENGTH];
-        filelist[i].loaded=0;
-        strcpy(word, "");
-        do{
-          c = (char)fgetc(fichier);
-          // space       new line     null       tab
-          if(c == ' ' || c == '\n' ||  c == '\0' || c =='\t' || c==',' || c=='.' || c =='(' || c == ')' || c=='?' || c=='!'){
-            if(strcmp(word , "")!=0){
-              remove_word(htable_ptr,word,i);
-              strcpy(word, "");
+            if (fichier == NULL)
+            {
+                perror("Error opening file"); // print error
+                return (-1);
             }
-          }
-          else
-          {
-            strcat(word, &c); //Keeps track of current word
-          }
-          //characterfunction(c);
-        }while(c != EOF);
-        fclose(fichier);
+            char c;
+            char word[MAX_LENGTH];
+            filelist[i].loaded = 0;
+            strcpy(word, "");
+            do
+            {
+                c = (char)fgetc(fichier);
+                // space       new line     null       tab
+                if (c == ' ' || c == '\n' || c == '\0' || c == '\t' || c == ',' || c == '.' || c == '(' || c == ')' || c == '?' || c == '!')
+                {
+                    if (strcmp(word, "") != 0)
+                    {
+                        remove_word(htable_ptr, word, i);
+                        strcpy(word, "");
+                    }
+                }
+                else
+                {
+                    strcat(word, &c); // Keeps track of current word
+                }
+                // characterfunction(c);
+            } while (c != EOF);
+            fclose(fichier);
 
-        return 0;
-      }
+            return 0;
+        }
+    }
 
-
-  }
-
-  return -1;
+    return -1;
 }
 
 /*
@@ -220,15 +234,15 @@ remove_file(char filename[],
   parameters :
    filelist : pointer to table of files
 */
-void
-print_list(listfile_entry * filelist)
+void print_list(listfile_entry *filelist)
 {
-for (int i = 0; i<sizeof(filelist); i++){
-  if(filelist[i].loaded == 1 ){
-    printf("%s\n",filelist[i].filename);
-  }
-}
-
+    for (int i = 0; i < sizeof(filelist); i++)
+    {
+        if (filelist[i].loaded == 1)
+        {
+            printf("%s\n", filelist[i].filename);
+        }
+    }
 }
 
 /**
@@ -237,10 +251,9 @@ for (int i = 0; i<sizeof(filelist); i++){
 parameters :
    filelist   : pointer to table of files
 */
-void
-free_filelist(listfile_entry * filelist)
+void free_filelist(listfile_entry *filelist)
 {
-  free(filelist);
+    free(filelist);
 }
 
 // ************************************************************************
